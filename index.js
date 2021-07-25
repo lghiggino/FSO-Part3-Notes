@@ -39,21 +39,31 @@ app.delete("/api/notes/:id", (request, response) => {
 })
 
 app.put("/api/notes/:id/importance", (request, response) => {
-    //O FRONTEND ESTA INVERTENDO O VALOR DA IMPORTANCIA DA NOTA, PRECISA SUBSTITUIR NO BACKEND, E RETORNAR TODAS AS NOTAS DE VOLTA (REFRESH)
-    console.log()
-    const id = request.params.id
-    const note = notes.filter(note => {
-        if(note.id === id){
-            note = request.body
-        }
-    })
-    response.status(200).json(notes).end()
+    console.log(request.params.id)
+    console.log("com o valor já invertido", request.body)
+    const note = notes.find(note => note.id === request.params.id)
+    
+    const changedNote = { ...note }
+    changedNote.id = request.body.id
+    changedNote.content = request.body.content
+    changedNote.date = request.body.date
+    changedNote.important = request.body.important
+
+    response.json(changedNote)
 })
 
 app.put("/api/notes/:id/date", (request, response) => {
-    const id = request.params.id
-    const note = note.filter(note => note.id === id)
-    console.log(note)
+    const newDate = new Date().toISOString()
+
+    const note = notes.find(n => { n.id === request.params.id })
+
+    const changedNote = { ...note }
+    changedNote.id = request.body.id
+    changedNote.content = request.body.content
+    changedNote.date = newDate
+    changedNote.important = request.body.important
+
+    response.json(changedNote)
 })
 
 //adding a new note
