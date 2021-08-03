@@ -24,7 +24,7 @@ const noteSchema = new mongoose.Schema({
 const Note = mongoose.model("Note", noteSchema)
 
 const note = new Note({
-    content: "Obrigado, Aurelie!",
+    content: "This note uses the same schema, but goes to a different collection",
     date: new Date(),
     important: true
 })
