@@ -23,29 +23,26 @@ const noteSchema = new mongoose.Schema({
 
 const Note = mongoose.model("Note", noteSchema)
 
-const note = new Note({
-    content: "This note uses the same schema, but goes to a different collection",
-    date: new Date(),
-    important: true
-})
-
-// note.save().then((response, reject) => {
-//     if (response) {
-//         console.log("note saved")
-//         mongoose.connection.close()
-//     }
-//     if (reject) {
-//         console.log("note rejected")
-//         mongoose.connection.close()
-//     }
+// CREATE
+// const note = new Note({
+//     content: "This note uses the same schema, but goes to a different collection",
+//     date: new Date(),
+//     important: true
 // })
 
-note.save().then(response => {
-    console.log("note saved", response)
-    mongoose.connection.close()
-}).catch((error) => { 
-    console.log(error) 
-}).finally(
-    console.log("terminou")
-)
+// note.save().then(response => {
+//     console.log("note saved", response)
+//     mongoose.connection.close()
+// }).catch((error) => { 
+//     console.log(error) 
+// }).finally(
+//     console.log("terminou")
+// )
 
+// READ
+Note.find({}).then(result => {
+    result.forEach(note => {
+      console.log(note)
+    })
+    mongoose.connection.close()
+  })

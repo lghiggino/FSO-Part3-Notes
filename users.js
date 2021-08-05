@@ -22,17 +22,23 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema)
 
 const user = new User({
-    userName: "lghiggino",
+    userName: "lghiggino12",
     createDate: new Date(),
 })
 
 
-user.save().then(response => {
-    console.log("user saved", response)
-    mongoose.connection.close()
-}).catch((error) => { 
-    console.log(error) 
-}).finally(
-    console.log("terminou de salvar user")
-)
+// user.save().then(response => {
+//     console.log("user saved", response)
+//     mongoose.connection.close()
+// }).catch((error) => { 
+//     console.log(error) 
+// }).finally(
+//     console.log("terminou de salvar user")
+// )
 
+User.find({}).then(result => {
+    result.forEach(user => {
+        console.log(user)
+    })
+    mongoose.connection.close()
+})
