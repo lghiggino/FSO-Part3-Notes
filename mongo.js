@@ -24,20 +24,20 @@ const noteSchema = new mongoose.Schema({
 const Note = mongoose.model("Note", noteSchema)
 
 // CREATE
-// const note = new Note({
-//     content: "This note uses the same schema, but goes to a different collection",
-//     date: new Date(),
-//     important: true
-// })
+const note = new Note({
+    content: "Nessa novela, não quero ser seu amigo",
+    date: new Date(),
+    important: true
+})
 
-// note.save().then(response => {
-//     console.log("note saved", response)
-//     mongoose.connection.close()
-// }).catch((error) => { 
-//     console.log(error) 
-// }).finally(
-//     console.log("terminou")
-// )
+note.save().then(response => {
+    console.log("note saved", response)
+    mongoose.connection.close()
+}).catch((error) => { 
+    console.log(error) 
+}).finally(
+    console.log("terminou")
+)
 
 // READ
 Note.find({}).then(result => {

@@ -1,6 +1,29 @@
 const express = require("express");
+const mongoose = require("mongoose")
+
 const cors = require("cors");
-let notes = require("./notes");
+// let notes = require("./notes");
+
+require('dotenv').config()
+const url = process.env.MONGO_DB_CONNECTION_STRING
+
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean
+})
+
+noteSchema.set("toJSON", {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
+    }
+})
+
+const Note = mongoose.model("Note", noteSchema)
 
 
 const app = express();
@@ -15,7 +38,9 @@ app.get("/", (request, response) => {
 })
 
 app.get("/api/notes", (request, response) => {
-    response.json(notes)
+    Note.find({}).then(notes => {
+        response.json(notes)
+    })
 })
 
 //fetching a single resource in RestfulApis
@@ -42,7 +67,7 @@ app.put("/api/notes/:id/importance", (request, response) => {
     console.log(request.params.id)
     console.log("com o valor já invertido", request.body)
     const note = notes.find(note => note.id === request.params.id)
-    
+
     const changedNote = { ...note }
     changedNote.id = request.body.id
     changedNote.content = request.body.content
