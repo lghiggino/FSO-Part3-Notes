@@ -25,7 +25,7 @@ const Note = mongoose.model("Note", noteSchema)
 
 // CREATE
 const note = new Note({
-    content: "Nessa novela, não quero ser seu amigo",
+    content: "J'San - Awekening",
     date: new Date(),
     important: true
 })
