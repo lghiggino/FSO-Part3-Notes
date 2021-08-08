@@ -1,19 +1,16 @@
 require("dotenv").config()
 const express = require("express");
-const cors = require("cors");
-
-const Note = require("./models/note")
 const app = express();
+const Note = require("./models/note")
 
 
 /***MIDDLEWARE***/
 app.use(express.json());
-app.use(cors());
 app.use(express.static("build"))
 
 /***ROUTES***/
 app.get("/", (request, response) => {
-    response.send("<h1>Hello World</h1>")
+    response.send("<h1>The Notes frontEnd should be loaded. if you're seeing this mesage check the app definitions to render app.use(express.static('build')) </h1>")
 })
 
 app.get("/api/notes", (request, response) => {
@@ -26,17 +23,19 @@ app.get("/api/notes", (request, response) => {
 app.get("/api/notes/:id", (request, response) => {
     const id = request.params.id
 
-    Note.findById(id).then(note => {
-        response.json(note)
-    }).catch(error => {
-        console.error(error)
-    })
-
-    if (note) {
-        response.json(note)
-    } else {
-        response.status(404).end()
-    }
+    Note.findById(id)
+        .then(note => {
+            console.log(note)
+            if (note) {
+                response.json(note)
+            } else {
+                response.status(404).end()
+            }
+        })
+        .catch(error => {
+            console.error(error)
+            response.status(500).end()
+        })
 })
 
 //deleting resources
@@ -81,18 +80,21 @@ app.post("/api/notes", (request, response) => {
     if (!body.content) {
         return response.status(400).json({ error: "content missing" })
     }
+    try {
+        const note = new Note({
+            content: body.content,
+            important: body.important || false,
+            date: new Date(),
+        })
 
-    const note = new Note({
-        content: body.content,
-        important: body.important || false,
-        date: new Date(),
-    })
+        note.save().then(savedNote => {
+            response.json(savedNote)
+        })
+    }
+    catch (error) {
+        console.error(error)
+    }
 
-    console.log("TO BE POSTED NOTE:", note)
-
-    note.save().then(savedNote => {
-        response.json(savedNote)
-    })
 })
 
 
