@@ -3,10 +3,22 @@ const express = require("express");
 const app = express();
 const Note = require("./models/note")
 
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === "CastError") {
+        response.status(400).send({ error: "malformatted id" })
+    }
+
+    next(error)
+}
+
 
 /***MIDDLEWARE***/
+app.use(express.static("build"));
 app.use(express.json());
-app.use(express.static("build"))
+app.use(errorHandler);
+
 
 /***ROUTES***/
 app.get("/", (request, response) => {
@@ -20,7 +32,7 @@ app.get("/api/notes", (request, response) => {
 })
 
 //fetching a single resource in RestfulApis
-app.get("/api/notes/:id", (request, response) => {
+app.get("/api/notes/:id", (request, response, next) => {
     const id = request.params.id
 
     Note.findById(id)
@@ -32,18 +44,19 @@ app.get("/api/notes/:id", (request, response) => {
                 response.status(404).end()
             }
         })
-        .catch(error => {
-            console.error(error)
-            response.status(400).send({error: "malformatted id"})
-        })
+        .catch(error => next(error))
 })
 
 //deleting resources
-app.delete("/api/notes/:id", (request, response) => {
-    const id = +request.params.id
-    notes = notes.filter(note => note.id !== id)
+app.delete("/api/notes/:id", (request, response, next) => {
+    const id = request.params.id
+    Note.findByIdAndDelete(id)
+        .then(result => {
+            response.status(204).end()
+        })
+        .catch(error => next(error))
 
-    response.status(204).end()
+
 })
 
 app.put("/api/notes/:id/importance", (request, response) => {
