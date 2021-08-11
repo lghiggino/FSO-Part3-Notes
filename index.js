@@ -59,33 +59,46 @@ app.delete("/api/notes/:id", (request, response, next) => {
 
 })
 
-app.put("/api/notes/:id/importance", (request, response) => {
-    console.log(request.params.id)
-    console.log("com o valor já invertido", request.body)
-    const note = notes.find(note => note.id === request.params.id)
+app.put("/api/notes/:id/importance", (request, response, next) => {
+    // console.log(request.params.id)
+    // console.log("com o valor já invertido", request.body)
+    // const note = notes.find(note => note.id === request.params.id)
 
-    const changedNote = { ...note }
-    changedNote.id = request.body.id
-    changedNote.content = request.body.content
-    changedNote.date = request.body.date
-    changedNote.important = request.body.important
+    // const changedNote = { ...note }
+    // changedNote.id = request.body.id
+    // changedNote.content = request.body.content
+    // changedNote.date = request.body.date
+    // changedNote.important = request.body.important
 
-    response.json(changedNote)
+    // response.json(changedNote)
+    const body = request.body
+    const id = request.params.id
+    
+    const note = {
+        content: body.content,
+        important: body.important
+    }
+
+    Note.findByIdAndUpdate(id, note, {new: true})
+    .then(updatedNote => {
+        response.json(updatedNote)
+    })
+    .catch(error => next(error))
 })
 
-app.put("/api/notes/:id/date", (request, response) => {
-    const newDate = new Date().toISOString()
+// app.put("/api/notes/:id/date", (request, response) => {
+//     const newDate = new Date().toISOString()
 
-    const note = notes.find(n => { n.id === request.params.id })
+//     const note = notes.find(n => { n.id === request.params.id })
 
-    const changedNote = { ...note }
-    changedNote.id = request.body.id
-    changedNote.content = request.body.content
-    changedNote.date = newDate
-    changedNote.important = request.body.important
+//     const changedNote = { ...note }
+//     changedNote.id = request.body.id
+//     changedNote.content = request.body.content
+//     changedNote.date = newDate
+//     changedNote.important = request.body.important
 
-    response.json(changedNote)
-})
+//     response.json(changedNote)
+// })
 
 app.post("/api/notes", (request, response) => {
     const body = request.body
