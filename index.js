@@ -3,21 +3,13 @@ const express = require("express");
 const app = express();
 const Note = require("./models/note")
 
-const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
-
-    if (error.name === "CastError") {
-        response.status(400).send({ error: "malformatted id" })
-    }
-
-    next(error)
-}
 
 
 /***MIDDLEWARE***/
 app.use(express.static("build"));
 app.use(express.json());
-app.use(errorHandler);
+
+
 
 
 /***ROUTES***/
@@ -73,17 +65,17 @@ app.put("/api/notes/:id/importance", (request, response, next) => {
     // response.json(changedNote)
     const body = request.body
     const id = request.params.id
-    
+
     const note = {
         content: body.content,
         important: body.important
     }
 
-    Note.findByIdAndUpdate(id, note, {new: true})
-    .then(updatedNote => {
-        response.json(updatedNote)
-    })
-    .catch(error => next(error))
+    Note.findByIdAndUpdate(id, note, { new: true })
+        .then(updatedNote => {
+            response.json(updatedNote)
+        })
+        .catch(error => next(error))
 })
 
 // app.put("/api/notes/:id/date", (request, response) => {
@@ -100,28 +92,52 @@ app.put("/api/notes/:id/importance", (request, response, next) => {
 //     response.json(changedNote)
 // })
 
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", (request, response, next) => {
     const body = request.body
 
     if (!body.content) {
         return response.status(400).json({ error: "content missing" })
     }
-    try {
-        const note = new Note({
-            content: body.content,
-            important: body.important || false,
-            date: new Date(),
-        })
 
-        note.save().then(savedNote => {
-            response.json(savedNote)
+    const note = new Note({
+        content: body.content,
+        important: body.important || false,
+        date: new Date().toDateString(),
+    })
+
+    note
+        .save()
+        .then(savedNote => {
+            console.log("savedNote", savedNote)
+            return savedNote.toJSON()
+        }).then(savedAndFormattedNote => {
+            console.log("savedAndFormattedNote", savedAndFormattedNote)
+            response.json(savedAndFormattedNote)
+        }).catch(error => {
+            next(error)
         })
-    }
-    catch (error) {
-        console.error(error)
-    }
 
 })
+
+const unknownEndpoint = (req, res) => {
+    res.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.log("======================+CHEGOU AQUI+=============================")
+    console.error(error.message)
+
+    if (error.name === "CastError") {
+        return response.status(400).send({ error: "malformatted id" })
+    } else if (error.name === "ValidationError") {
+        return response.status(400).send({ error: error.message })
+    } else {
+        next(error)
+    }
+}
+
+app.use(errorHandler);
 
 
 const PORT = process.env.PORT || 3001
