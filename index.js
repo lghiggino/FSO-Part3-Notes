@@ -1,20 +1,20 @@
 require("dotenv").config()
-const express = require("express");
-const app = express();
+const express = require("express")
+const app = express()
 const Note = require("./models/note")
 
 
 
 /***MIDDLEWARE***/
-app.use(express.static("build"));
-app.use(express.json());
+app.use(express.static("build"))
+app.use(express.json())
 
 
 
 
 /***ROUTES***/
 app.get("/", (request, response) => {
-    response.send("<h1>The Notes frontEnd should be loaded. if you're seeing this mesage check the app definitions to render app.use(express.static("build")) </h1>")
+    response.send("<h1>The Notes frontEnd should be loaded. if you're seeing this mesage check the app definitions to render app.use(express.static('build')) </h1>")
 })
 
 app.get("/api/notes", (request, response) => {
@@ -43,7 +43,7 @@ app.get("/api/notes/:id", (request, response, next) => {
 app.delete("/api/notes/:id", (request, response, next) => {
     const id = request.params.id
     Note.findByIdAndDelete(id)
-        .then(result => {
+        .then( () => {
             response.status(204).end()
         })
         .catch(error => next(error))
@@ -137,7 +137,7 @@ const errorHandler = (error, request, response, next) => {
     }
 }
 
-app.use(errorHandler);
+app.use(errorHandler)
 
 
 const PORT = process.env.PORT || 3001

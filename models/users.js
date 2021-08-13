@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-require('dotenv').config()
+require("dotenv").config()
 
 
 if (process.argv.length < 3) {
@@ -7,34 +7,31 @@ if (process.argv.length < 3) {
     process.exit(1)
 }
 
-const password = process.env.MONGO_DB_PASS
-
 const url = process.env.MONGO_DB_USERS_CONNECTION_STRING
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
 const userSchema = new mongoose.Schema({
     userName: String,
-    createDate: Date,
-    
+    createDate: Date
 })
 
 const User = mongoose.model("User", userSchema)
 
 const user = new User({
-    userName: "lghiggino12",
+    userName: "novo User criado em users.js",
     createDate: new Date(),
 })
 
 
-// user.save().then(response => {
-//     console.log("user saved", response)
-//     mongoose.connection.close()
-// }).catch((error) => { 
-//     console.log(error) 
-// }).finally(
-//     console.log("terminou de salvar user")
-// )
+user.save().then(response => {
+    console.log("user saved", response)
+    mongoose.connection.close()
+}).catch( (error) => {
+    console.log(error)
+}).finally(
+    console.log("terminou de salvar user")
+)
 
 User.find({}).then(result => {
     result.forEach(user => {
