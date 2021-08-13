@@ -14,7 +14,7 @@ app.use(express.json());
 
 /***ROUTES***/
 app.get("/", (request, response) => {
-    response.send("<h1>The Notes frontEnd should be loaded. if you're seeing this mesage check the app definitions to render app.use(express.static('build')) </h1>")
+    response.send("<h1>The Notes frontEnd should be loaded. if you're seeing this mesage check the app definitions to render app.use(express.static("build")) </h1>")
 })
 
 app.get("/api/notes", (request, response) => {
@@ -102,16 +102,16 @@ app.post("/api/notes", (request, response, next) => {
     const note = new Note({
         content: body.content,
         important: body.important || false,
-        date: new Date().toDateString(),
+        date: new Date(),
     })
 
     note
         .save()
         .then(savedNote => {
-            console.log("savedNote", savedNote)
+            //console.log("savedNote", savedNote)
             return savedNote.toJSON()
         }).then(savedAndFormattedNote => {
-            console.log("savedAndFormattedNote", savedAndFormattedNote)
+            //console.log("savedAndFormattedNote", savedAndFormattedNote)
             response.json(savedAndFormattedNote)
         }).catch(error => {
             next(error)
@@ -120,7 +120,7 @@ app.post("/api/notes", (request, response, next) => {
 })
 
 const unknownEndpoint = (req, res) => {
-    res.status(404).send({ error: 'unknown endpoint' })
+    res.status(404).send({ error: "unknown endpoint" })
 }
 app.use(unknownEndpoint)
 
