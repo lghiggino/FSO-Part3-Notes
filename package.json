@@ -1,5 +1,5 @@
 {
-  "name": "nodetest",
+  "name": "fso-part3-notes-backend",
   "version": "0.0.1",
   "description": "Full Stack Open part3 experiment",
   "main": "index.js",
@@ -31,5 +31,13 @@
   "devDependencies": {
     "eslint": "^7.32.0",
     "nodemon": "^2.0.12"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lghiggino/FSO-Part3-Notes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lghiggino/FSO-Part3-Notes/issues"
+  },
+  "homepage": "https://github.com/lghiggino/FSO-Part3-Notes#readme"
 }
