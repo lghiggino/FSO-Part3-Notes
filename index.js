@@ -1,9 +1,10 @@
 const express = require('express')
 let notes = require('./fixtures')
-const generateId = require('./utils')
+const {generateId, requestLogger} = require('./utils')
 
 const app = express()
 app.use(express.json())
+app.use(requestLogger)
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')

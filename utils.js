@@ -3,4 +3,14 @@ const generateId = (notes) => {
   return maxId + 1;
 };
 
-module.exports = generateId;
+const requestLogger = (request, response, next) => {
+  request.context = request.body.content;
+  console.log("Method:", request.method);
+  console.log("Path:  ", request.path);
+  console.log("Body:  ", request.body);
+  console.log("Context", request.context);
+  console.log("---");
+  next();
+};
+
+module.exports = { generateId, requestLogger };
