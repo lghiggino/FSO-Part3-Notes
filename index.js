@@ -5,6 +5,7 @@ let notes = require("./fixtures");
 
 const app = express();
 app.use(cors());
+app.use(express.static("build"));
 app.use(express.json());
 app.use(requestLogger);
 
@@ -54,9 +55,20 @@ app.post("/api/notes", (request, response) => {
   response.json(note);
 });
 
+app.put("/api/notes/:id", (request, response) => {
+  const id = Number(request.params.id);
+  const note = notes.find((note) => note.id === id);
+  console.log(notes);
+
+  response.status(200).end();
+});
+
 app.use(unknownEndpoint);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+//https://fullstackopen.com/en/part3/deploying_app_to_internet#same-origin-policy-and-cors
+//flyctl auth login
