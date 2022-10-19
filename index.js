@@ -70,5 +70,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-//https://fullstackopen.com/en/part3/deploying_app_to_internet#same-origin-policy-and-cors
-//flyctl auth login
+
