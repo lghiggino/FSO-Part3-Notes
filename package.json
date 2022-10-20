@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build:ui": "rm -rf build && cd ../FSO-Part2/Notes/ && npm run build && cp build ../../FSO-Part3-Notes"
+    "build:ui": "rm -rf build && cd ../FSO-Part2/Notes/ && npm run build && cp -r build ../../FSO-Part3-Notes"
   },
   "repository": {
     "type": "git",
