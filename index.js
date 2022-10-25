@@ -16,19 +16,17 @@ app.get("/", (request, response) => {
 });
 
 app.get("/api/notes", (request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
-  })
+  Note.find({}).then((notes) => {
+    response.json(notes);
+  });
 });
 
 app.get("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const note = notes.find((note) => note.id === id);
-  if (note) {
-    response.json(note);
-  } else {
-    response.status(404).end();
-  }
+  const id = request.params.id;
+
+  Note.findById(id).then((foundNote) => {
+    response.json(foundNote);
+  });
 });
 
 app.delete("/api/notes/:id", (request, response) => {
@@ -53,9 +51,9 @@ app.post("/api/notes", (request, response) => {
     date: new Date(),
   });
 
-  note.save().then(savedNote => {
-    response.json(savedNote)
-  })
+  note.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
 
 app.put("/api/notes/:id", (request, response) => {
