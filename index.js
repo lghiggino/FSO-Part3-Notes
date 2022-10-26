@@ -30,10 +30,13 @@ app.get("/api/notes/:id", (request, response) => {
 });
 
 app.delete("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  notes = notes.filter((note) => note.id !== id);
+  const id = request.params.id;
 
-  response.status(204).end();
+  Note.deleteOne({ id })
+    .then((deletedNote) => {
+      response.json(deletedNote);
+    })
+    .catch((error) => console.log(error));
 });
 
 app.post("/api/notes", (request, response) => {
@@ -57,11 +60,26 @@ app.post("/api/notes", (request, response) => {
 });
 
 app.put("/api/notes/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const note = notes.find((note) => note.id === id);
-  console.log(notes);
+  const id = request.params.id;
 
-  response.status(200).end();
+  Note.findById(id)
+    .then((foundNote) => {
+      console.log(foundNote.important);
+      let invertedBoolean = !foundNote.important;
+      const editedNote = {
+        id: foundNote.id,
+        content: foundNote.content,
+        date: foundNote.date,
+        import: invertedBoolean,
+      };
+      console.log(editedNote);
+      Note.updateOne({id}, editedNote)
+        .then(console.log('updated'))
+        .catch((error) => {
+          console.log(error);
+        });
+    })
+    .catch((error) => console.log(error));
 });
 
 app.use(unknownEndpoint);
