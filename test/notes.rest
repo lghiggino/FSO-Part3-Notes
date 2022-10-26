@@ -9,4 +9,8 @@ Content-Type: application/json
     "content": "Note created with rest client for vsCode",
     "important": false
 }
+###
+DELETE http://localhost:3001/api/notes/6357c9a4a7b077206787d09b
+###
+PUT http://localhost:3001/api/notes/63567582b7003523611d7ab9
 
