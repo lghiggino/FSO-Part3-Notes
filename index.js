@@ -1,8 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const { generateId, requestLogger, unknownEndpoint } = require("./utils");
-let notes = require("./fixtures");
+const { requestLogger, unknownEndpoint } = require("./utils");
 const Note = require("./models/note");
 
 const app = express();
