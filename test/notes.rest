@@ -6,11 +6,16 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-    "content": "Note created with rest client for vsCode",
+    "content": "This note should be deleted",
     "important": false
 }
 ###
-DELETE http://localhost:3001/api/notes/6357c9a4a7b077206787d09b
+DELETE http://localhost:3001/api/notes/635bb2b5c900565f9965e65b
 ###
-PUT http://localhost:3001/api/notes/63567582b7003523611d7ab9
+PUT http://localhost:3001/api/notes/635bb2f8466f28ebc1478beb
+Content-Type: application/json
 
+{
+    "content": "This note should be deleted",
+    "important": true
+}

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const { requestLogger, unknownEndpoint } = require("./utils");
+const { requestLogger, unknownEndpoint, errorHandler } = require("./utils");
 const Note = require("./models/note");
 
 const app = express();
@@ -20,20 +20,26 @@ app.get("/api/notes", (request, response) => {
   });
 });
 
-app.get("/api/notes/:id", (request, response) => {
+app.get("/api/notes/:id", (request, response, next) => {
   const id = request.params.id;
 
-  Note.findById(id).then((foundNote) => {
-    response.json(foundNote);
-  });
+  Note.findById(id)
+    .then((foundNote) => {
+      if (foundNote) {
+        response.json(foundNote);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 app.delete("/api/notes/:id", (request, response) => {
   const id = request.params.id;
 
-  Note.deleteOne({ id })
+  Note.findByIdAndDelete(id)
     .then((deletedNote) => {
-      response.json(deletedNote);
+      response.status(204).json("deleted").end();
     })
     .catch((error) => console.log(error));
 });
@@ -59,29 +65,22 @@ app.post("/api/notes", (request, response) => {
 });
 
 app.put("/api/notes/:id", (request, response) => {
-  const id = request.params.id;
+  const body = request.body;
 
-  Note.findById(id)
-    .then((foundNote) => {
-      console.log(foundNote.important);
-      let invertedBoolean = !foundNote.important;
-      const editedNote = {
-        id: foundNote.id,
-        content: foundNote.content,
-        date: foundNote.date,
-        import: invertedBoolean,
-      };
-      console.log(editedNote);
-      Note.updateOne({id}, editedNote)
-        .then(console.log('updated'))
-        .catch((error) => {
-          console.log(error);
-        });
+  const note = {
+    content: body.content,
+    important: body.important,
+  };
+
+  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+    .then((updatedNote) => {
+      response.json(updatedNote);
     })
-    .catch((error) => console.log(error));
+    .catch((error) => next(error));
 });
 
 app.use(unknownEndpoint);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
